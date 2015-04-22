@@ -12,13 +12,18 @@ const (
 	LEON_STRUCT_TAG_PARAM_NAME = "key"
 )
 
+type FieldNotFoundError struct{}
+
+func (this *FieldNotFoundError) Error() string {
+	return "Field not found."
+}
+
 // 根据 tag 名称，在给定的结构体中查找该字段信息，并返回。
-// 如果没有找到则会返回一个空的结构（零值？）
 // ....
 //   UserName	string	`key:"u"`
 // ....
-func findFiledByTag(tag string, t reflect.Type) (field reflect.StructField, err error) {
-
+func findFiledByTag(tag string, val reflect.Value) (field reflect.StructField, aval reflect.Value, err error) {
+	t := val.Type()
 	// 验证参数可用性
 	if t.Kind().String() != "struct" {
 		// TODO 抛出异常
@@ -28,13 +33,29 @@ func findFiledByTag(tag string, t reflect.Type) (field reflect.StructField, err 
 
 	// 查找
 	for i := 0; i < t.NumField(); i++ {
-		if t.Field(i).Tag.Get(LEON_STRUCT_TAG_PARAM_NAME) == tag { // Found
-			field = t.Field(i)
-			return
+		if t.Field(i).Type.Kind() == reflect.Struct {
+			// 如果该字段是一个Struct
+			field, aval, err = findFiledByTag(tag, val.FieldByName(t.Field(i).Name))
+			if err == nil {
+				//log.Println("found super:\n", field, "\nvalue:", aval, "\n", err)
+				return
+			} else if _, ok := err.(*FieldNotFoundError); ok {
+				continue
+			} else {
+				return
+			}
+		} else {
+			if t.Field(i).Tag.Get(LEON_STRUCT_TAG_PARAM_NAME) == tag { // Found
+				field = t.Field(i)
+				aval = val.FieldByName(field.Name)
+				err = nil
+				//log.Println("found child:\n", field, "\nvalue:", aval, "\n", err)
+				return
+			}
 		}
 	}
 	// 查找结束，没有找到
-	err = errors.New("Not Found!")
+	err = &FieldNotFoundError{}
 	return
 }
 
@@ -51,12 +72,12 @@ func ToObject(query string, p2value reflect.Value) interface{} {
 
 	// 遍历请求参数
 	for k, v := range values {
-		field, err := findFiledByTag(k, p2value.Elem().Type())
+		// 尝试通过tag名称找到filed
+		_, actualVal, err := findFiledByTag(k, p2value.Elem())
 		if err == nil {
-			actualVal := p2value.Elem().FieldByName(field.Name)
+			// 根据找到filed名称获取该字段的值，并设置之
+			//log.Println("SetValue: Field:", filed, "; Val:", actualVal, "; Err:", err)
 			actualVal.SetString(v[0])
-		} else {
-			// NotFound
 		}
 	}
 

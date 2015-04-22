@@ -1,9 +1,6 @@
 package goutils
 
-import (
-	"errors"
-	"fmt"
-)
+import "errors"
 
 // 查找'地板值'
 // 也就是数组nums中最大的，小于num的值。
@@ -16,7 +13,7 @@ func SearchFloor(num int64, nums []int64) (val, idx int64, err error) {
 	end := len(nums) - 1
 	for {
 		mid := (start + end) / 2
-		fmt.Println("start: ", start, "; end: ", end, "; mid : ", mid)
+		//fmt.Println("start: ", start, "; end: ", end, "; mid : ", mid)
 
 		if nums[mid] == num {
 			return nums[mid], int64(mid), nil
