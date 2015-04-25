@@ -35,16 +35,28 @@ func ToString(obj interface{}) string {
 	// 识别输入参数类型
 	switch objType.Kind() {
 	case reflect.Ptr:
+		fmt.Println("Ptr -> ", objVal)
 		// 如果是指针类型，则尝试获取其指向的内容
 		if objVal.CanInterface() {
 			return ToString(objVal.Elem().Interface())
 		}
 	case reflect.Struct:
+		fmt.Println("Struct -> ", objVal)
 		buffer := bytes.NewBufferString("{ ")
 		for i := 0; i < objType.NumField(); i++ {
 			field := objType.Field(i)
 			fVal := objVal.Field(i)
-			buffer.WriteString(fmt.Sprintf("%v:%v; ", field.Name, fVal.Interface()))
+			switch field.Type.Kind() {
+			case reflect.Struct:
+				// 如果该字段为Struct，则递归调用ToString方法
+				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, ToString((fVal.Interface()))))
+			case reflect.Ptr:
+				if fVal.CanInterface() {
+					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, ToString((fVal.Elem().Interface()))))
+				}
+			default:
+				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, fVal.Interface()))
+			}
 		}
 		buffer.WriteString("}")
 		return buffer.String()
