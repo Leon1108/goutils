@@ -35,13 +35,11 @@ func ToString(obj interface{}) string {
 	// 识别输入参数类型
 	switch objType.Kind() {
 	case reflect.Ptr:
-		fmt.Println("Ptr -> ", objVal)
 		// 如果是指针类型，则尝试获取其指向的内容
 		if objVal.CanInterface() {
 			return ToString(objVal.Elem().Interface())
 		}
 	case reflect.Struct:
-		fmt.Println("Struct -> ", objVal)
 		buffer := bytes.NewBufferString("{ ")
 		for i := 0; i < objType.NumField(); i++ {
 			field := objType.Field(i)
