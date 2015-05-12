@@ -52,7 +52,7 @@ func ToString(obj interface{}) string {
 				if fVal.CanInterface() {
 					var val string
 					if fVal.Elem().IsValid() {
-						val = ToString((fVal.Elem().Interface()))
+						val = ToString(fVal.Elem().Interface())
 					}
 					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, val))
 				}
