@@ -50,7 +50,11 @@ func ToString(obj interface{}) string {
 				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, ToString((fVal.Interface()))))
 			case reflect.Ptr:
 				if fVal.CanInterface() {
-					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, ToString((fVal.Elem().Interface()))))
+					var val string
+					if fVal.Elem().IsValid() {
+						val = ToString((fVal.Elem().Interface()))
+					}
+					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, val))
 				}
 			default:
 				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, fVal.Interface()))

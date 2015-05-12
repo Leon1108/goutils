@@ -14,3 +14,13 @@ func TestToString(t *testing.T) {
 
 	t.Logf("%v", ToString(obj))
 }
+
+func TestToStringWithZeroValue(t *testing.T) {
+	obj := MixedMsg{}
+	t.Logf(">>> %v", ToString(obj))
+}
+
+func TestToStringWithNil(t *testing.T) {
+	obj := MixedMsg{TestMsg: nil}
+	t.Logf(">>> %v", ToString(obj))
+}
