@@ -56,6 +56,24 @@ func ToString(obj interface{}) string {
 					}
 					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, val))
 				}
+			case reflect.Slice, reflect.Array:
+				buffer.WriteString(fmt.Sprintf("%v:[ ", field.Name))
+				if fVal.CanInterface() && fVal.IsValid() {
+					// 遍历数组元素
+					for i := 0; i < fVal.Len(); i++ {
+						switch fVal.Index(i).Kind() {
+						case reflect.Struct, reflect.Array, reflect.Slice:
+							buffer.WriteString(fmt.Sprintf("%v ", ToString(fVal.Index(i).Interface())))
+						case reflect.Ptr:
+							if fVal.Index(i).CanInterface() {
+								buffer.WriteString(fmt.Sprintf("%v ", ToString(fVal.Index(i).Elem().Interface())))
+							}
+						default:
+							buffer.WriteString(fmt.Sprintf("%v ", fVal.Index(i)))
+						}
+					}
+				}
+				buffer.WriteString("] ")
 			default:
 				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, fVal.Interface()))
 			}

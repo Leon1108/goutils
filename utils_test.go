@@ -10,6 +10,14 @@ func TestToString(t *testing.T) {
 			A: "a",
 			C: "c",
 		},
+		S:  []string{"S1", "S2"},
+		S2: [][]string{{"S11", "S12"}, {"S21", "S22"}},
+		SS: []*TestMsg{
+			&TestMsg{A: "a1", C: "c1"},
+		},
+		SSS: []TestMsg{
+			TestMsg{A: "a1", C: "c1"},
+		},
 	}
 
 	t.Logf("%v", ToString(obj))

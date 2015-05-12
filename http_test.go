@@ -18,8 +18,12 @@ type TestMsg struct {
 
 type MixedMsg struct {
 	*TestMsg
-	X string `key:"x"`
-	Z string `key:"z"`
+	X   string   `key:"x"`
+	Z   string   `key:"z"`
+	S   []string `key:"s"`
+	S2  [][]string
+	SS  []*TestMsg `key:"ss"`
+	SSS []TestMsg  `key:"sss"`
 }
 
 func TestToObject(t *testing.T) {
