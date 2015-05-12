@@ -45,40 +45,53 @@ func ToString(obj interface{}) string {
 			field := objType.Field(i)
 			fVal := objVal.Field(i)
 			switch field.Type.Kind() {
-			case reflect.Struct:
+			case reflect.Struct, reflect.Slice, reflect.Array, reflect.Map:
 				// 如果该字段为Struct，则递归调用ToString方法
-				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, ToString((fVal.Interface()))))
+				buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, ToString((fVal.Interface()))))
 			case reflect.Ptr:
 				if fVal.CanInterface() {
 					var val string
 					if fVal.Elem().IsValid() {
 						val = ToString(fVal.Elem().Interface())
+					} else {
+						val = "<Invalid>"
 					}
-					buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, val))
+					buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, val))
 				}
-			case reflect.Slice, reflect.Array:
-				buffer.WriteString(fmt.Sprintf("%v:[ ", field.Name))
-				if fVal.CanInterface() && fVal.IsValid() {
-					// 遍历数组元素
-					for i := 0; i < fVal.Len(); i++ {
-						switch fVal.Index(i).Kind() {
-						case reflect.Struct, reflect.Array, reflect.Slice:
-							buffer.WriteString(fmt.Sprintf("%v ", ToString(fVal.Index(i).Interface())))
-						case reflect.Ptr:
-							if fVal.Index(i).CanInterface() {
-								buffer.WriteString(fmt.Sprintf("%v ", ToString(fVal.Index(i).Elem().Interface())))
-							}
-						default:
-							buffer.WriteString(fmt.Sprintf("%v ", fVal.Index(i)))
-						}
-					}
-				}
-				buffer.WriteString("] ")
 			default:
-				buffer.WriteString(fmt.Sprintf("%v:%v ", field.Name, fVal.Interface()))
+				buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, fVal.Interface()))
 			}
 		}
 		buffer.WriteString("}")
+		return buffer.String()
+	case reflect.Slice, reflect.Array:
+		buffer := bytes.NewBufferString("[ ")
+		if objVal.CanInterface() && objVal.IsValid() {
+			// 遍历数组元素
+			for i := 0; i < objVal.Len(); i++ {
+				switch objVal.Index(i).Kind() {
+				case reflect.Struct, reflect.Array, reflect.Slice:
+					buffer.WriteString(fmt.Sprintf("%v ", ToString(objVal.Index(i).Interface())))
+				case reflect.Ptr:
+					if objVal.Index(i).CanInterface() {
+						buffer.WriteString(fmt.Sprintf("%v ", ToString(objVal.Index(i).Elem().Interface())))
+					}
+				default:
+					buffer.WriteString(fmt.Sprintf("%v ", objVal.Index(i)))
+				}
+			}
+		}
+		buffer.WriteString("] ")
+		return buffer.String()
+	case reflect.Map:
+		buffer := bytes.NewBufferString("{ ")
+		if objVal.CanInterface() && objVal.IsValid() {
+			for _, key := range objVal.MapKeys() {
+				val := objVal.MapIndex(key)
+				buffer.WriteString(fmt.Sprintf("'%v':%v ", key, ToString(val.Interface())))
+			}
+		}
+		buffer.WriteString("} ")
 		return buffer.String()
 	}
 	return fmt.Sprintf("%v", obj)

@@ -18,9 +18,28 @@ func TestToString(t *testing.T) {
 		SSS: []TestMsg{
 			TestMsg{A: "a1", C: "c1"},
 		},
+		M:   map[string]string{"K1": "V1", "K2": "V2"},
+		MM:  map[string]TestMsg{"K1": TestMsg{A: "M1", C: "C1"}},
+		MMM: map[string]*TestMsg{"K1": &TestMsg{A: "M1", C: "C1"}},
 	}
 
 	t.Logf("%v", ToString(obj))
+}
+
+func TestToStringArray(t *testing.T) {
+	objs := []*MixedMsg{
+		&MixedMsg{X: "x1"},
+		&MixedMsg{X: "x2"},
+	}
+	t.Logf(">>> %v", ToString(objs))
+}
+
+func TestToStringMap(t *testing.T) {
+	m := map[string]*MixedMsg{
+		"k1": &MixedMsg{Z: "z1"},
+		"k2": &MixedMsg{Z: "z2"},
+	}
+	t.Logf(">>> %v", ToString(m))
 }
 
 func TestToStringWithZeroValue(t *testing.T) {
