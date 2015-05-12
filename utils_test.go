@@ -2,6 +2,14 @@ package goutils
 
 import "testing"
 
+func TestGetCurrentMillisecond(t *testing.T) {
+	t.Logf("%v", GetCurrentMillisecond())
+}
+
+func TestGetCurrentTime(t *testing.T) {
+	t.Logf("%v", GetCurrentTime())
+}
+
 func TestToString(t *testing.T) {
 	obj := MixedMsg{
 		X: "x",

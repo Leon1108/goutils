@@ -11,9 +11,18 @@ import (
 	"time"
 )
 
+const (
+	TIME_FOMRAT_SIMPLE = "2006-01-02 15:04:05.999"
+)
+
 // 获取当前的毫秒值
 func GetCurrentMillisecond() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+// 获取格式化过的时间，精确到毫秒
+func GetCurrentTime() string {
+	return time.Now().Format(TIME_FOMRAT_SIMPLE)
 }
 
 // 判断当前运行方式是否为单元测试
