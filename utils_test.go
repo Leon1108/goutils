@@ -10,6 +10,10 @@ func TestGetCurrentTime(t *testing.T) {
 	t.Logf("%v", GetCurrentTime())
 }
 
+func TestToStringNil(t *testing.T) {
+	t.Logf("%v", ToString(nil))
+}
+
 func TestToString(t *testing.T) {
 	obj := MixedMsg{
 		X: "x",

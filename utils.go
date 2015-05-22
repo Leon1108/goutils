@@ -38,6 +38,10 @@ func IsTesting() bool {
 
 // 将一个 interface{} 类型输出成字符串，主要是针对Struct类型进行了特殊处理
 func ToString(obj interface{}) string {
+	if obj == nil {
+		return "<Nil>"
+	}
+
 	objType := reflect.TypeOf(obj)
 	objVal := reflect.ValueOf(obj)
 
