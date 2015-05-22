@@ -64,10 +64,10 @@ func ToString(obj interface{}) string {
 			case reflect.Ptr:
 				if fVal.CanInterface() {
 					var val string
-					if !fVal.Elem().IsValid() {
-						val = "<Invalid>"
-					} else if fVal.Elem().IsNil() {
+					if fVal.IsNil() {
 						val = "<Nil>"
+					} else if !fVal.Elem().IsValid() {
+						val = "<Invalid>"
 					} else {
 						val = ToString(fVal.Elem().Interface())
 					}
