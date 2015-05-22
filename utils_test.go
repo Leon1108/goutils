@@ -11,7 +11,14 @@ func TestGetCurrentTime(t *testing.T) {
 }
 
 func TestToStringNil(t *testing.T) {
-	t.Logf("%v", ToString(nil))
+	var obj *MixedMsg
+	t.Logf("%v", ToString(obj))
+
+	obj = &MixedMsg{
+		TestMsg: nil,
+	}
+	t.Logf("%v", ToString(obj))
+	t.Logf("%v", ToString(obj.TestMsg))
 }
 
 func TestToString(t *testing.T) {

@@ -18,6 +18,7 @@ type TestMsg struct {
 
 type MixedMsg struct {
 	*TestMsg
+	Msg TestMsg
 	X   string   `key:"x"`
 	Z   string   `key:"z"`
 	S   []string `key:"s"`

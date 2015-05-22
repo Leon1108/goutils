@@ -39,7 +39,7 @@ func IsTesting() bool {
 // 将一个 interface{} 类型输出成字符串，主要是针对Struct类型进行了特殊处理
 func ToString(obj interface{}) string {
 	if obj == nil {
-		return "<Nil>"
+		return fmt.Sprintf("%v", obj)
 	}
 
 	objType := reflect.TypeOf(obj)
@@ -49,7 +49,7 @@ func ToString(obj interface{}) string {
 	switch objType.Kind() {
 	case reflect.Ptr:
 		// 如果是指针类型，则尝试获取其指向的内容
-		if objVal.CanInterface() {
+		if objVal.CanInterface() && !objVal.IsNil() {
 			return ToString(objVal.Elem().Interface())
 		}
 	case reflect.Struct:
@@ -64,10 +64,12 @@ func ToString(obj interface{}) string {
 			case reflect.Ptr:
 				if fVal.CanInterface() {
 					var val string
-					if fVal.Elem().IsValid() {
-						val = ToString(fVal.Elem().Interface())
-					} else {
+					if !fVal.Elem().IsValid() {
 						val = "<Invalid>"
+					} else if fVal.Elem().IsNil() {
+						val = "<Nil>"
+					} else {
+						val = ToString(fVal.Elem().Interface())
 					}
 					buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, val))
 				}
