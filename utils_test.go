@@ -1,6 +1,15 @@
 package goutils
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
+
+type TestTimeMsg struct {
+	Name  string
+	Age   int
+	Birth time.Time
+}
 
 func TestGetCurrentMillisecond(t *testing.T) {
 	t.Logf("%v", GetCurrentMillisecond())
@@ -76,4 +85,11 @@ func TestToStringWithZeroValue(t *testing.T) {
 func TestToStringWithNil(t *testing.T) {
 	obj := MixedMsg{TestMsg: nil}
 	t.Logf(">>> %v", ToString(obj))
+}
+
+func TestToStringTime(t *testing.T) {
+	t.Logf(">>>>> %v", ToString(time.Now()))
+
+	obj := TestTimeMsg{"Leon", 33, time.Now()}
+	t.Logf(">>>>> %v", ToString(obj))
 }

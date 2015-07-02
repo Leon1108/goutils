@@ -53,13 +53,31 @@ func ToString(obj interface{}) string {
 			return ToString(objVal.Elem().Interface())
 		}
 	case reflect.Struct:
+		// 针对 time.Time 类型做特殊处理
+		if objVal.CanInterface() {
+			if _, ok := objVal.Interface().(time.Time); ok {
+				break
+			}
+		}
+
 		buffer := bytes.NewBufferString("{ ")
 		for i := 0; i < objType.NumField(); i++ {
 			field := objType.Field(i)
 			fVal := objVal.Field(i)
+
 			switch field.Type.Kind() {
-			case reflect.Struct, reflect.Slice, reflect.Array, reflect.Map:
+			case reflect.Struct:
+				if fVal.CanInterface() {
+					// 针对 time.Time 类型做特殊处理
+					if t, ok := fVal.Interface().(time.Time); ok {
+						buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, t))
+						break
+					}
+				}
+
 				// 如果该字段为Struct，则递归调用ToString方法
+				buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, ToString((fVal.Interface()))))
+			case reflect.Slice, reflect.Array, reflect.Map:
 				buffer.WriteString(fmt.Sprintf("'%v':%v ", field.Name, ToString((fVal.Interface()))))
 			case reflect.Ptr:
 				if fVal.CanInterface() {
