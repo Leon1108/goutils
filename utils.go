@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strings"
 	"time"
+	"unicode"
 )
 
 const (
@@ -64,6 +65,12 @@ func ToString(obj interface{}) string {
 		for i := 0; i < objType.NumField(); i++ {
 			field := objType.Field(i)
 			fVal := objVal.Field(i)
+
+			// 判断是否为私有成员
+			if IsPrivateMember(field.Name) {
+				buffer.WriteString(fmt.Sprintf("'%v':<Private> ", field.Name))
+				continue
+			}
 
 			switch field.Type.Kind() {
 			case reflect.Struct:
@@ -128,6 +135,15 @@ func ToString(obj interface{}) string {
 		return buffer.String()
 	}
 	return fmt.Sprintf("%v", obj)
+}
+
+// 根据字段名或函数名判断其是否为私有成员
+func IsPrivateMember(name string) bool {
+	fs := []rune(name)
+	if len(fs) > 0 {
+		return unicode.IsLower(fs[0])
+	}
+	return false
 }
 
 // 判断是否为空，对于String类型，nil或是空字符串均认为是空。对于Array/Map/Chan/Slice nil或者长度为0均认为是空。

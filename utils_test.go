@@ -106,5 +106,12 @@ func TestToStringTime(t *testing.T) {
 }
 
 func TestToStringPrivate(t *testing.T) {
-	t.Logf(">>>>> %v", ToString(TestMsgWithPrivate{}))
+	t.Logf(">>>>> %v", ToString(TestMsgWithPrivate{
+		Name: "Leon",
+		age:  11,
+		others: &privateField{
+			sex:     0,
+			married: true,
+		},
+	}))
 }
