@@ -11,6 +11,17 @@ type TestTimeMsg struct {
 	Birth time.Time
 }
 
+type TestMsgWithPrivate struct {
+	Name   string
+	age    int
+	others *privateField
+}
+
+type privateField struct {
+	sex     int
+	married bool
+}
+
 func TestGetCurrentMillisecond(t *testing.T) {
 	t.Logf("%v", GetCurrentMillisecond())
 }
@@ -92,4 +103,8 @@ func TestToStringTime(t *testing.T) {
 
 	obj := TestTimeMsg{"Leon", 33, time.Now()}
 	t.Logf(">>>>> %v", ToString(obj))
+}
+
+func TestToStringPrivate(t *testing.T) {
+	t.Logf(">>>>> %v", ToString(TestMsgWithPrivate{}))
 }
