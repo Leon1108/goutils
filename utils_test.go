@@ -115,3 +115,8 @@ func TestToStringPrivate(t *testing.T) {
 		},
 	}))
 }
+
+func TestTimeFromUnixMS(t *testing.T) {
+	ms := GetCurrentMillisecond()
+	t.Log(TimeFromUnixMS(ms))
+}

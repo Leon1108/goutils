@@ -21,6 +21,10 @@ func GetCurrentMillisecond() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
+func TimeFromUnixMS(ms int64) time.Time {
+	return time.Unix(ms/1000, (ms%1000)*int64(time.Millisecond))
+}
+
 // 获取格式化过的时间，精确到毫秒
 func GetCurrentTime() string {
 	return time.Now().Format(TIME_FOMRAT_SIMPLE)
