@@ -2,6 +2,7 @@ package goutils
 
 import (
 	"bytes"
+	"errors"
 	"crypto/aes"
 	"crypto/cipher"
 )
@@ -24,6 +25,12 @@ func EncryptAES(plaintext, key, iv []byte) (ciphertext []byte, err error) {
 }
 
 func DecryptAES(ciphertext, key, iv []byte) (plaintext []byte, err error) {
+	defer func() {
+		if obj := recover(); obj != nil {
+			err = errors.New(obj.(string))
+		}
+	}()
+
 	var block cipher.Block
 	if block, err = aes.NewCipher(key); err != nil {
 		return
