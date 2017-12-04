@@ -35,8 +35,9 @@ func GetCurrentTime() string {
 func IsTesting() bool {
 	file, _ := exec.LookPath(os.Args[0])
 	path, _ := filepath.Abs(file)
-	if strings.HasSuffix(path, "test") {
-		return true
+	tmpDir := os.TempDir()
+	if strings.Index(path, tmpDir) > 0 {
+		return true;
 	}
 	return false
 }
