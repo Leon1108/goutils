@@ -1,6 +1,9 @@
 package goutils
 
-import "errors"
+import (
+	"errors"
+	"sort"
+)
 
 // 查找'地板值'
 // 也就是数组nums中最大的，小于num的值。
@@ -8,7 +11,13 @@ import "errors"
 // @param idx 其在数组中的索引, 如果没有找到则返回-1
 // @param err 当没有找到时，一般是由于需要查找的值小于数组中的最小值，返回err
 func SearchFloor(num int64, nums []int64) (val, idx int64, err error) {
-	// TODO 先对nums排序
+
+	if len(nums) <= 0 {
+		return -1, -1, nil
+	}
+
+	sort.Slice(nums, func(i, j int) bool { return nums[i] < nums[j] })
+
 	start := 0
 	end := len(nums) - 1
 	for {
@@ -19,7 +28,7 @@ func SearchFloor(num int64, nums []int64) (val, idx int64, err error) {
 			return nums[mid], int64(mid), nil
 		}
 
-		if end-start == 1 {
+		if end-start == 1 || end-start == 0 {
 			if num >= nums[end] {
 				return nums[end], int64(end), nil
 			} else if num >= nums[start] {
