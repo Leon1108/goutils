@@ -54,8 +54,7 @@ func initLogger(fileDir, fileName, pattern string) (err error) {
 		logrus.ErrorLevel: rlog,
 		logrus.FatalLevel: rlog,
 		logrus.PanicLevel: rlog,
-	}))
-	log.Formatter = &logrus.TextFormatter{ForceColors: true}
+	}, &logrus.TextFormatter{ForceColors: true}))
 	return
 }
 
