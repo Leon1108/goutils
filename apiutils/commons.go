@@ -23,6 +23,14 @@ type CommonResp struct {
 	Payload interface{}   `json:"payload,omitempty"`
 }
 
+func NewCommonResp(payload interface{}, err error) *CommonResp {
+	if err != nil {
+		return NewFailedCommonResp(err)
+	} else {
+		return NewSuccessCommonResp(payload)
+	}
+}
+
 func NewSuccessCommonResp(payload interface{}) *CommonResp {
 	return &CommonResp{&CommonStatus{CommonStatusCodeSuccess, "Success"}, payload}
 }
