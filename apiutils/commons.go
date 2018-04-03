@@ -53,8 +53,12 @@ func NewCommonResp(payload interface{}, err error) *CommonResp {
 	}
 }
 
-func NewListResponse(payload *ListPayload) *CommonResp {
-	return NewSuccessCommonResp(payload)
+func NewListResponse(data interface{}, total, pageSize, offset int, err ...error) *CommonResp {
+	if len(err) > 0 {
+		return NewFailedCommonResp(err[0])
+	} else {
+		return NewSuccessCommonResp(&ListPayload{data, Pagination{total, pageSize, offset}})
+	}
 }
 
 func NewSuccessCommonResp(payload interface{}) *CommonResp {
