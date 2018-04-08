@@ -172,3 +172,13 @@ func IsEmpty(obj interface{}) bool {
 	}
 	return false
 }
+
+// 如果全部不为空，返回true
+func IsNotEmpty(objs ...interface{}) bool {
+	for _, obj := range objs {
+		if IsEmpty(obj) {
+			return false
+		}
+	}
+	return true
+}

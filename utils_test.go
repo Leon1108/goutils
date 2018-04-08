@@ -3,6 +3,7 @@ package goutils
 import (
 	"testing"
 	"time"
+	"fmt"
 )
 
 type TestTimeMsg struct {
@@ -119,4 +120,15 @@ func TestToStringPrivate(t *testing.T) {
 func TestTimeFromUnixMS(t *testing.T) {
 	ms := GetCurrentMillisecond()
 	t.Log(TimeFromUnixMS(ms))
+}
+
+func TestIsNotEmpty(t *testing.T) {
+	if IsNotEmpty(nil) {
+		t.Error(fmt.Errorf("'false' wanted!"))
+	}
+	if IsNotEmpty("") {
+		t.Error(fmt.Errorf("'false' wanted!"))
+	}
+	t.Log(IsNotEmpty("a"))
+	t.Log(IsNotEmpty("a", nil))
 }
