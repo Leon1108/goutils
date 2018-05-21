@@ -71,7 +71,7 @@ func TestSearchFloorV2(t *testing.T) {
 		20160615,
 		20170720}
 	val, idx, err := SearchFloor(19901010, is)
-	fmt.Println(val, idx, err)
+	fmt.Println(val, idx, err, err.(NotFoundError))
 
 	val, idx, err = SearchFloor(20150413, is)
 	fmt.Println(val, idx, err)

@@ -1,7 +1,6 @@
 package goutils
 
 import (
-	"errors"
 	"sort"
 )
 
@@ -34,7 +33,7 @@ func SearchFloor(num int64, nums []int64) (val, idx int64, err error) {
 			} else if num >= nums[start] {
 				return nums[start], int64(start), nil
 			} else {
-				return -1, -1, errors.New("Not Found!")
+				return -1, -1, NotFoundError{}
 			}
 		}
 
@@ -44,4 +43,11 @@ func SearchFloor(num int64, nums []int64) (val, idx int64, err error) {
 			start = mid // 找后半段
 		}
 	}
+}
+
+type NotFoundError struct {
+}
+
+func (e NotFoundError) Error() string {
+	return "not found"
 }
