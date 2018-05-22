@@ -182,3 +182,11 @@ func IsNotEmpty(objs ...interface{}) bool {
 	}
 	return true
 }
+
+// 模拟三元表达式
+func Ternary(b bool, ifTrue interface{}, ifFalse interface{}) interface{} {
+	if b {
+		return ifTrue
+	}
+	return ifFalse
+}
